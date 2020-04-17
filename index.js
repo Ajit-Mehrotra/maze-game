@@ -43,14 +43,6 @@ const shuffle = (arr) => {
   }
   return arr;
 };
-// const grid = [];
-
-// for (let i = 0; i < 3; i++) {
-//   grid.push([]);
-//   for (let j = 0; j < 3; j++) {
-//     grid.push(false);
-//   }
-// }
 
 const grid = Array(cells)
   .fill(null)
@@ -76,22 +68,46 @@ const stepThroughCell = (row, col) => {
   //Mark this cell as being visited
   grid[row][col] = true;
   //Assemble randomly-ordered list of neighbors
-  const neighbor = shuffle([
-    [row - 1, col],
-    [row, col + 1],
-    [row + 1, col],
-    [row, col - 1],
+  const neighbors = shuffle([
+    [row - 1, col, "up"],
+    [row, col + 1, "right"],
+    [row + 1, col, "down"],
+    [row, col - 1, "left"],
   ]);
-  console.log(neighbor);
   //For Each neighbor...
+  for (let neighbor of neighbors) {
+    const [nextRow, nextColumn, direction] = neighbor;
+    //See if that neighbor is out of bounds
+    if (
+      nextRow < 0 ||
+      nextRow >= cells ||
+      nextColumn < 0 ||
+      nextColumn >= cells
+    ) {
+      //console.log("oops");
+      continue;
+    }
 
-  //See if that neighbor is out of bounds
+    //If we have visted that neighbor, continue to the next neighbor
+    if (grid[nextRow][nextColumn]) {
+      // remember true in grid means it's unavailable bc we already visted it
+      continue;
+    }
+    //Remove the wall from  either horizontals or verticals arrays
+    //(important to remember that all verticals and horizontals are false by default
+    //, and are only set to true when they've been broken through)
+    if (direction === "left") {
+      verticals[row][col - 1] = true;
+    } else if (direction === "right") {
+      verticals[row][col] = true;
+    } else if (direction === "up") {
+      horizontals[row - 1][col] = true;
+    } else if (direction === "down") {
+      horizontals[row][col] = true;
+    }
 
-  //If we have visted that neighbor, continue to the next neighbor
-
-  //Remove the wall from  either horizontals or verticals arrays
-
-  //Visit that next cell
+    //Visit that next cell
+  }
 };
 
-stepThroughCell(1, 1);
+stepThroughCell(startRow, startCol);
