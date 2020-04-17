@@ -67,6 +67,7 @@ const stepThroughCell = (row, col) => {
 
   //Mark this cell as being visited
   grid[row][col] = true;
+
   //Assemble randomly-ordered list of neighbors
   const neighbors = shuffle([
     [row - 1, col, "up"],
@@ -74,9 +75,11 @@ const stepThroughCell = (row, col) => {
     [row + 1, col, "down"],
     [row, col - 1, "left"],
   ]);
+
   //For Each neighbor...
   for (let neighbor of neighbors) {
     const [nextRow, nextColumn, direction] = neighbor;
+
     //See if that neighbor is out of bounds
     if (
       nextRow < 0 ||
@@ -84,15 +87,15 @@ const stepThroughCell = (row, col) => {
       nextColumn < 0 ||
       nextColumn >= cells
     ) {
-      //console.log("oops");
       continue;
     }
 
     //If we have visted that neighbor, continue to the next neighbor
     if (grid[nextRow][nextColumn]) {
-      // remember true in grid means it's unavailable bc we already visted it
+      // remember "true" state in grid means it's unavailable bc we already visted it
       continue;
     }
+
     //Remove the wall from  either horizontals or verticals arrays
     //(important to remember that all verticals and horizontals are false by default
     //, and are only set to true when they've been broken through)
@@ -107,6 +110,7 @@ const stepThroughCell = (row, col) => {
     }
 
     //Visit that next cell
+    stepThroughCell(nextRow, nextColumn);
   }
 };
 
