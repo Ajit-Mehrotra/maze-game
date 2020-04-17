@@ -1,6 +1,6 @@
 const { Engine, Render, Runner, World, Bodies } = Matter;
 
-const cells = 4; //rows/columns we're using a square maze for now so it doesn't matter
+const cells = 3; //rows/columns we're using a square maze for now so it doesn't matter
 const width = 1200;
 const height = 500;
 
@@ -30,7 +30,19 @@ const walls = [
 World.add(world, walls);
 
 // Maze Generation
+const shuffle = (arr) => {
+  let counter = arr.length;
 
+  while (counter != 0) {
+    const index = Math.floor(Math.random() * counter);
+
+    counter--;
+    const temp = arr[counter];
+    arr[counter] = arr[index];
+    arr[index] = temp;
+  }
+  return arr;
+};
 // const grid = [];
 
 // for (let i = 0; i < 3; i++) {
@@ -51,3 +63,35 @@ const verticals = Array(cells)
 const horizontals = Array(cells - 1)
   .fill(null)
   .map(() => Array(cells).fill(false));
+
+const startRow = Math.floor(Math.random() * cells);
+const startCol = Math.floor(Math.random() * cells);
+
+const stepThroughCell = (row, col) => {
+  //If I have visited the cell at [row, col], then return
+  if (grid[row][col]) {
+    return;
+  }
+
+  //Mark this cell as being visited
+  grid[row][col] = true;
+  //Assemble randomly-ordered list of neighbors
+  const neighbor = shuffle([
+    [row - 1, col],
+    [row, col + 1],
+    [row + 1, col],
+    [row, col - 1],
+  ]);
+  console.log(neighbor);
+  //For Each neighbor...
+
+  //See if that neighbor is out of bounds
+
+  //If we have visted that neighbor, continue to the next neighbor
+
+  //Remove the wall from  either horizontals or verticals arrays
+
+  //Visit that next cell
+};
+
+stepThroughCell(1, 1);
